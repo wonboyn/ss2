@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+
+#----------------------
+# Development Container
+#----------------------
+  dotnet-dev:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: dotnet-dev
+    container_name: dotnet-dev
+    command: ["/bin/bash"]
+    stdin_open: true
+    tty: true
+    env_file:
+      - env-vars
+    ports:
+      - "5678:5678"
+    volumes:
+      - ../src:/workspace

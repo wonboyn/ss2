@@ -1,0 +1,9 @@
+{
+    "name": "SelfService",
+    "dockerComposeFile": "../Docker/docker-compose.yml",
+    "service": "dotnet-dev",
+    "shutdownAction": "stopCompose",
+    "workspaceFolder": "/workspace",
+    "extensions": [],
+    "settings": {}
+}

@@ -1,0 +1,7 @@
+#########################################
+#
+# The following environment variables
+# will be loaded into the dotnet-dev
+# container.
+#
+#########################################
