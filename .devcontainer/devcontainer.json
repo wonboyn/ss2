@@ -4,6 +4,9 @@
     "service": "dotnet-dev",
     "shutdownAction": "stopCompose",
     "workspaceFolder": "/workspace",
-    "extensions": [],
+    "extensions": [
+        "ms-azuretools.vscode-azurefunctions",
+        "ms-dotnettools.csharp"
+    ],
     "settings": {}
 }
