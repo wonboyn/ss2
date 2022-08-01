@@ -6,6 +6,7 @@
     "workspaceFolder": "/workspace",
     "extensions": [
         "ms-azuretools.vscode-azurefunctions",
+        "ms-azuretools.vscode-cosmosdb",
         "ms-dotnettools.csharp"
     ],
     "settings": {}
