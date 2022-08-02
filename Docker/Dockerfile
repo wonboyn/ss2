@@ -2,8 +2,9 @@
 FROM mcr.microsoft.com/azure-functions/dotnet-isolated:4-dotnet-isolated6.0-core-tools
 
 
-# Create required directories
-RUN mkdir -p /workspace/.vscode
+# Basic setup
+RUN mkdir -p /workspace/.vscode \
+    && echo "set -o vi" >> /root/.bashrc
 
 
 # Copy VS Code files
