@@ -40,17 +40,16 @@ namespace SelfServiceProj
         {
 
             // Log start of processing
-            _logger.LogInformation("Started Self Service Bot processing with framework...");
+            _logger.LogInformation("Started Self Service Bot processing...");
 
             // Build the request/response objects
             var (botreq, botresp) = GenBotObjects(request);
-
 
             // Send to the bot adapter for processing
             await _adapter.ProcessAsync(botreq, botresp, _bot);
 
             // Log completion of processing
-            _logger.LogInformation("Finished Self Service Bot processing with framework...");
+            _logger.LogInformation("Finished Self Service Bot processing...");
 
             // Mock up a response
             var response = request.CreateResponse(HttpStatusCode.OK);
@@ -68,6 +67,14 @@ namespace SelfServiceProj
 
             // Set the method
             request.Method = inbound.Method;
+
+            // Set the headers
+            foreach (var item in inbound.Headers)
+            {
+                var hdr_key = item.Key;
+                var hdr_val = item.Value.ToString();
+                request.Headers[hdr_key] = hdr_val;
+            }
 
             // Set the content type
             request.ContentType = "application/json";
