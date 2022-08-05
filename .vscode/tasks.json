@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Cleanup Docker",
+            "label": "Docker: Cleanup",
             "type": "shell",
             "command": "cd ${workspaceFolder}/Docker; docker-compose down -v; docker rmi dotnet-dev",
             "problemMatcher": [],
@@ -14,6 +14,29 @@
                 "showReuseMessage": true,
                 "clear": false
             }
+        },
+        {
+            "label": "DotNet: Build",
+            "type": "process",
+            "command": "/usr/local/share/dotnet/dotnet",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/SelfServiceProj/SelfServiceProj.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+            "dependsOn": [
+                "DotNet: Clean"
+            ]
+        },
+        {
+            "label": "DotNet: Clean",
+            "type": "process",
+            "command": "/usr/local/share/dotnet/dotnet",
+            "args": [
+                "clean",
+                "${workspaceFolder}/src/SelfServiceProj/SelfServiceProj.csproj"
+            ],
+            "problemMatcher": "$msCompile"
         }
     ]
 }
