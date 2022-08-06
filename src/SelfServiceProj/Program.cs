@@ -19,7 +19,7 @@ var host = new HostBuilder()
         services.AddSingleton<IBotFrameworkHttpAdapter, SelfServiceProj.BotAdapter>();
 
         // Inject the Bot itself
-        services.AddTransient<IBot, SelfServiceProj.SelfServiceBot>();
+        services.AddTransient<IBot, SelfServiceProj.BotHandler>();
     })
     .Build();
 
