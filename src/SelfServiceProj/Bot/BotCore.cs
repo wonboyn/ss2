@@ -48,12 +48,17 @@ namespace SelfServiceProj
             ITurnContext<IConversationUpdateActivity> turnContext,
             CancellationToken cancellationToken)
         {
-            var welcomeText = "Hello and welcome!";
+
+            // Create a welcome card
+            var card = new SelfServiceProj.WelcomeCard();
+            var attachment = card.GenerateAttachment();
+
+            // Send the welcome card to new members
             foreach (var member in membersAdded)
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    await turnContext.SendActivityAsync(MessageFactory.Text(welcomeText, welcomeText), cancellationToken);
+                    await turnContext.SendActivityAsync(MessageFactory.Attachment(attachment), cancellationToken);
                 }
             }
         }
