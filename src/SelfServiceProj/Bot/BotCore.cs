@@ -35,12 +35,22 @@ namespace SelfServiceProj
 
     public class BotHandler : ActivityHandler
     {
+
+        private readonly SelfServiceProj.SelfServiceSettings _settings;
+
+        public BotHandler(SelfServiceProj.SelfServiceSettings settings)
+        {
+            _settings = settings;
+        }
+
         protected override async Task OnMessageActivityAsync(
             ITurnContext<IMessageActivity> turnContext,
             CancellationToken cancellationToken)
         {
             var replyText = $"Echo: {turnContext.Activity.Text}";
-            await turnContext.SendActivityAsync(MessageFactory.Text(replyText, replyText), cancellationToken);
+            await turnContext.SendActivityAsync(
+                MessageFactory.Text(replyText, replyText),
+                cancellationToken);
         }
 
         protected override async Task OnMembersAddedAsync(
@@ -48,6 +58,9 @@ namespace SelfServiceProj
             ITurnContext<IConversationUpdateActivity> turnContext,
             CancellationToken cancellationToken)
         {
+
+            // Try connect to DB
+            var db = new Database(_settings);
 
             // Create a welcome card
             var card = new SelfServiceProj.WelcomeCard();
@@ -58,7 +71,9 @@ namespace SelfServiceProj
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    await turnContext.SendActivityAsync(MessageFactory.Attachment(attachment), cancellationToken);
+                    await turnContext.SendActivityAsync(
+                        MessageFactory.Attachment(attachment),
+                        cancellationToken);
                 }
             }
         }
