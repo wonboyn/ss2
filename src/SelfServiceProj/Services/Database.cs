@@ -1,6 +1,4 @@
 using Microsoft.Azure.Cosmos;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 
 namespace SelfServiceProj
@@ -8,46 +6,33 @@ namespace SelfServiceProj
 
     public interface IDatabase
     {
-        Task<IEnumerable<Skill>> GetMultipleAsync(string query);
-        Task<Skill> GetAsync(string id);
-        Task AddAsync(Skill skill);
-        Task UpdateAsync(string id, Skill skill);
-        Task DeleteAsync(string id);
+        Task<Action> GetAction(string id);
+        Task<IEnumerable<Action>> GetAll();
     }
 
 
     public class Database : IDatabase
     {
-        private readonly SelfServiceSettings _config;
+        private readonly SelfServiceConfig _config;
         private Container _container;
 
-        public Database(SelfServiceSettings config)
+
+        public Database(SelfServiceConfig config)
         {
             // Initialise member variables
             _config = config;
 
-            // Get CosmosDB Client
+            // Connect to the database
             var _client = new CosmosClient(_config.DbUrl);
-
-            // Get CosmosDB Client
             _container = _client.GetContainer(_config.DbName, _config.ContainerName);
         }
 
-        public async Task AddAsync(Skill skill)
-        {
-            await _container.CreateItemAsync(skill, new PartitionKey(skill.Id));
-        }
 
-        public async Task DeleteAsync(string id)
-        {
-            await _container.DeleteItemAsync<Skill>(id, new PartitionKey(id));
-        }
-
-        public async Task<Skill> GetAsync(string id)
+        public async Task<Action> GetAction(string id)
         {
             try
             {
-                var response = await _container.ReadItemAsync<Skill>(id, new PartitionKey(id));
+                var response = await _container.ReadItemAsync<Action>(id, new PartitionKey(id));
                 return response.Resource;
             }
             catch (CosmosException) //For handling item not found and other exceptions
@@ -56,11 +41,13 @@ namespace SelfServiceProj
             }
         }
 
-        public async Task<IEnumerable<Skill>> GetMultipleAsync(string queryString)
-        {
-            var query = _container.GetItemQueryIterator<Skill>(new QueryDefinition(queryString));
 
-            var results = new List<Skill>();
+        public async Task<IEnumerable<Action>> GetAll()
+        {
+            var queryString = "SELECT * FROM SkillsDB1";
+            var query = _container.GetItemQueryIterator<Action>(new QueryDefinition(queryString));
+
+            var results = new List<Action>();
             while (query.HasMoreResults)
             {
                 var response = await query.ReadNextAsync();
@@ -68,11 +55,6 @@ namespace SelfServiceProj
             }
 
             return results;
-        }
-
-        public async Task UpdateAsync(string id, Skill skill)
-        {
-            await _container.UpsertItemAsync(skill, new PartitionKey(id));
         }
     }
 }

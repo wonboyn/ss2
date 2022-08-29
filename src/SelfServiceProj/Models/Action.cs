@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace SelfServiceProj
 {
-    public class Skill
+    public class Action
     {
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }

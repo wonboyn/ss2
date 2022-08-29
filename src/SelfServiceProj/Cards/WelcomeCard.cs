@@ -14,8 +14,13 @@ namespace SelfServiceProj
             });
             _card.Body.Add(new AdaptiveTextBlock()
             {
-                Text = "For a list of skills click the button below",
+                Text = "For a list of possible actions click the button below",
                 Size = AdaptiveTextSize.Small
+            });
+            _card.Actions.Add(new AdaptiveSubmitAction()
+            {
+                Title = "List Actions",
+                Data = "list"
             });
         }
     }
