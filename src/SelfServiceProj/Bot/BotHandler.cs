@@ -3,6 +3,7 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 
 
 namespace SelfServiceProj
@@ -12,13 +13,47 @@ namespace SelfServiceProj
 
         protected readonly SelfServiceConfig _config;
 
-        
+
         public BotHandler(
             IConfiguration configuration,
             ILogger<IBotFrameworkHttpAdapter> logger)
         {
             _config = new SelfServiceConfig();
             configuration.Bind(_config);
+        }
+
+
+        private Attachment DoBasicHelp()
+        {
+
+            // Connect to DB
+            var db = new Database(_config);
+
+            // Get list of actions
+            var actions = db.GetAll();
+
+            // Create an action list card
+            var card = new SelfServiceProj.ActionListCard();
+            var attachment = card.GenerateAttachment();
+
+            return attachment;
+        }
+
+
+        private Attachment DoActionHelp(String action)
+        {
+
+            // Connect to DB
+            var db = new Database(_config);
+
+            // Get list of actions
+            var actionDetails = db.GetAction(action);
+
+            // Create an action help card
+            var card = new SelfServiceProj.ActionHelpCard();
+            var attachment = card.GenerateAttachment();
+
+            return attachment;
         }
 
 
@@ -50,34 +85,52 @@ namespace SelfServiceProj
             CancellationToken cancellationToken)
         {
 
-            // Generate an appropriate response
-            //var replyText = $"Echo: {turnContext.Activity.Text}";
-            var attachment = GetHelp();
+            // Get user input
+            Attachment? attachment = null;
+            var input = turnContext.Activity.Text.ToLower();
+
+            //  What do we need to do?
+            if (String.IsNullOrEmpty(input))
+            {
+                // No input so send help
+                attachment = DoBasicHelp();
+            }
+            else
+            {
+                // What was requested?
+                switch (input)
+                {
+                    case "help":
+                    case "list":
+
+                        // Basic help (ie list actions)
+                        attachment = DoBasicHelp();
+                        break;
+
+                    case string s when Regex.IsMatch(s, @"^help\s+[0-9a-zA-Z]+$"):
+
+                        // Specific action help
+                        var cmd = input.Split(" ");
+                        if (cmd.Length != 2)
+                        {
+                            attachment = DoBasicHelp();
+                        }
+                        else
+                        {
+                            attachment = DoActionHelp(cmd[1]);
+                        }
+                        break;
+
+                    default:
+                        attachment = DoBasicHelp();
+                        break;
+                }
+            }
 
             // Send the response
-            // await turnContext.SendActivityAsync(
-            //     MessageFactory.Text(replyText, replyText),
-            //     cancellationToken);
             await turnContext.SendActivityAsync(
                 MessageFactory.Attachment(attachment),
                 cancellationToken);
-        }
-
-
-        private Attachment GetHelp()
-        {
-
-            // Connect to DB
-            var db = new Database(_config);
-
-            // Get list of actions
-            var actions = db.GetAll();
-
-            // Create a help card
-            var card = new SelfServiceProj.HelpCard();
-            var attachment = card.GenerateAttachment();
-
-            return attachment;
         }
     }
 }

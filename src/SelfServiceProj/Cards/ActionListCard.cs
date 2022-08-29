@@ -2,10 +2,10 @@ using AdaptiveCards;
 
 namespace SelfServiceProj
 {
-    public class HelpCard : BaseCard
+    public class ActionListCard : BaseCard
     {
 
-        public HelpCard()
+        public ActionListCard()
         {
             _card.Body.Add(new AdaptiveTextBlock()
             {
