@@ -39,17 +39,11 @@ namespace SelfServiceProj
             )] HttpRequestData request)
         {
 
-            // Log start of processing
-            _logger.LogDebug("Started Bot processing...");
-
             // Build the request/response objects
             var (botreq, botresp) = GenBotObjects(request);
 
             // Send to the bot adapter for processing
             await _adapter.ProcessAsync(botreq, botresp, _bot);
-
-            // Log completion of processing
-            _logger.LogDebug("Finished Bot processing...");
 
             // Mock up a response
             var response = request.CreateResponse(HttpStatusCode.OK);

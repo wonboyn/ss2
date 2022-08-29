@@ -12,14 +12,20 @@ namespace SelfServiceProj
     {
 
         protected readonly SelfServiceConfig _config;
+        protected readonly ILogger _logger;
 
 
         public BotHandler(
             IConfiguration configuration,
             ILogger<IBotFrameworkHttpAdapter> logger)
         {
+
+            // Bind the configuration to our config model
             _config = new SelfServiceConfig();
             configuration.Bind(_config);
+
+            // Setup the logger
+            _logger = logger;
         }
 
 
@@ -63,6 +69,9 @@ namespace SelfServiceProj
             CancellationToken cancellationToken)
         {
 
+            // Log start
+            _logger.LogDebug("Started OnMembersAddedAsync() processing...");
+
             // Create a welcome card
             var card = new SelfServiceProj.WelcomeCard();
             var attachment = card.GenerateAttachment();
@@ -77,6 +86,9 @@ namespace SelfServiceProj
                         cancellationToken);
                 }
             }
+
+            // Log end
+            _logger.LogDebug("Finished OnMembersAddedAsync() processing...");
         }
 
 
@@ -84,6 +96,9 @@ namespace SelfServiceProj
             ITurnContext<IMessageActivity> turnContext,
             CancellationToken cancellationToken)
         {
+
+            // Log start
+            _logger.LogDebug("Started OnMessageActivityAsync() processing...");
 
             // Get user input
             Attachment? attachment = null;
@@ -131,6 +146,9 @@ namespace SelfServiceProj
             await turnContext.SendActivityAsync(
                 MessageFactory.Attachment(attachment),
                 cancellationToken);
+
+            // Log end
+            _logger.LogDebug("Finished OnMessageActivityAsync() processing...");
         }
     }
 }
