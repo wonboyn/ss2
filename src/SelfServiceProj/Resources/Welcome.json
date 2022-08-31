@@ -1,0 +1,27 @@
+{
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "version": "1.3",
+    "type": "AdaptiveCard",
+    "speak": "Your flight is confirmed for you and 3 other passengers from San Francisco to Amsterdam on Friday, October 10 8:30 AM",
+    "body": [
+        {
+            "type": "TextBlock",
+            "text": "Welcome to the Self Service Bot",
+            "size": "large",
+            "weight": "bolder",
+            "isSubtle": false
+        },
+        {
+            "type": "TextBlock",
+            "text": "For a list of possible actions click the button below",
+            "size": "small"
+        }
+    ],
+    "actions": [
+        {
+          "type": "Action.Submit",
+          "title": "List Actions",
+          "data": "help"
+        }
+    ]
+}

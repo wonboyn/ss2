@@ -3,6 +3,7 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 
 
@@ -13,6 +14,7 @@ namespace SelfServiceProj
 
         protected readonly SelfServiceConfig _config;
         protected readonly ILogger _logger;
+        protected readonly string _rootPath;
 
 
         public BotHandler(
@@ -26,6 +28,9 @@ namespace SelfServiceProj
 
             // Setup the logger
             _logger = logger;
+
+            // Derive the root path
+            _rootPath = configuration.GetValue<string>("AzureWebJobsScriptRoot");
         }
 
 
@@ -73,8 +78,9 @@ namespace SelfServiceProj
             _logger.LogDebug("Started OnMembersAddedAsync() processing...");
 
             // Create a welcome card
-            var card = new SelfServiceProj.WelcomeCard();
-            var attachment = card.GenerateAttachment();
+            // var card = new SelfServiceProj.WelcomeCard();
+            // var attachment = card.GenerateAttachment();
+            var attachment = LoadSchema("Welcome.json");
 
             // Send the welcome card to new members
             foreach (var member in membersAdded)
@@ -149,6 +155,21 @@ namespace SelfServiceProj
 
             // Log end
             _logger.LogDebug("Finished OnMessageActivityAsync() processing...");
+        }
+
+
+        private Attachment LoadSchema(string file)
+        {
+
+            // Derive the path to the Card JSON file
+            var contentPath = Path.GetFullPath(Path.Combine(_rootPath, "Resources", file));
+            var adaptiveCardJson = File.ReadAllText(contentPath);
+            var adaptiveCardAttachment = new Attachment()
+            {
+                ContentType = "application/vnd.microsoft.card.adaptive",
+                Content = JsonConvert.DeserializeObject(adaptiveCardJson),
+            };
+            return adaptiveCardAttachment;
         }
     }
 }
