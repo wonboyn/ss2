@@ -11,30 +11,72 @@
             "isSubtle": false
         },
         {
-            "type": "ColumnSet",
-            "columns": [
+            "type": "Container",
+            "spacing": "Large",
+            "style": "emphasis",
+            "bleed": true,
+            "items": [
                 {
-                    "type": "Column",
-                    "width": "auto",
-                    "items": [
+                    "type": "ColumnSet",
+                    "columns": [
                         {
-                            "type": "TextBlock",
-                            "text": "Total",
-                            "size": "medium",
-                            "isSubtle": true
+                            "type": "Column",
+                            "width": "auto",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "ACTION",
+                                    "weight": "bolder",
+                                    "wrap": true
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "DETAIL",
+                                    "weight": "bolder",
+                                    "wrap": true
+                                }
+                            ]
                         }
                     ]
-                },
+                }
+            ]
+        },
+        {
+            "$data": "${expenses}",
+            "type": "Container",
+            "items": [
                 {
-                    "type": "Column",
-                    "width": "auto",
-                    "items": [
+                    "type": "ColumnSet",
+                    "columns": [
                         {
-                            "type": "TextBlock",
-                            "horizontalAlignment": "right",
-                            "text": "$4,032.54",
-                            "size": "medium",
-                            "weight": "bolder"
+                            "type": "Column",
+                            "width": "auto",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "${id}",
+                                    "weight": "bolder",
+                                    "wrap": true
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "spacing": "Medium",
+                            "width": "stretch",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "${description}",
+                                    "wrap": true
+                                }
+                            ]
                         }
                     ]
                 }

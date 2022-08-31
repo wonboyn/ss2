@@ -35,7 +35,7 @@ namespace SelfServiceProj
         }
 
 
-        private async Task<Attachment> DoActionHelp(String action)
+        private async Task<Attachment> DoHelp(String action)
         {
 
             // Connect to DB
@@ -45,14 +45,17 @@ namespace SelfServiceProj
             var actionDetails = await db.GetAction(action);
 
             // Create an action help card
-            var card = new SelfServiceProj.ActionHelpCard();
-            var attachment = card.GenerateAttachment();
-
+            var json = LoadJson("Help.json");
+            var attachment = new Attachment()
+            {
+                ContentType = "application/vnd.microsoft.card.adaptive",
+                Content = JsonConvert.DeserializeObject(json),
+            };
             return attachment;
         }
 
 
-        private async Task<Attachment> DoBasicHelp()
+        private async Task<Attachment> DoList()
         {
 
             // Connect to DB
@@ -62,9 +65,12 @@ namespace SelfServiceProj
             var actions = await db.GetAll();
 
             // Create the help/list card
-            var card = new SelfServiceProj.ActionListCard();
-            var attachment = card.GenerateAttachment();
-
+            var json = LoadJson("List.json");
+            var attachment = new Attachment()
+            {
+                ContentType = "application/vnd.microsoft.card.adaptive",
+                Content = JsonConvert.DeserializeObject(json),
+            };
             return attachment;
         }
 
@@ -136,7 +142,7 @@ namespace SelfServiceProj
             if (String.IsNullOrEmpty(input))
             {
                 // No input so send help
-                attachment = await DoBasicHelp();
+                attachment = await DoList();
             }
             else
             {
@@ -146,8 +152,8 @@ namespace SelfServiceProj
                     case "help":
                     case "list":
 
-                        // Basic help (ie list actions)
-                        attachment = await DoBasicHelp();
+                        // Send list of actions
+                        attachment = await DoList();
                         break;
 
                     case string s when Regex.IsMatch(s, @"^help\s+[0-9a-zA-Z]+$"):
@@ -156,16 +162,16 @@ namespace SelfServiceProj
                         var cmd = input.Split(" ");
                         if (cmd.Length != 2)
                         {
-                            attachment = await DoBasicHelp();
+                            attachment = await DoList();
                         }
                         else
                         {
-                            attachment = await DoActionHelp(cmd[1]);
+                            attachment = await DoHelp(cmd[1]);
                         }
                         break;
 
                     default:
-                        attachment = await DoBasicHelp();
+                        attachment = await DoList();
                         break;
                 }
             }
