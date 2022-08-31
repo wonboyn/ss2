@@ -63,6 +63,7 @@ namespace SelfServiceProj
 
             // Get list of actions
             var actions = await db.GetAll();
+            var actionsJson = JsonConvert.SerializeObject(actions);
 
             // Create the help/list card
             var json = LoadJson("List.json");
@@ -138,6 +139,9 @@ namespace SelfServiceProj
             Attachment? attachment = null;
             var input = turnContext.Activity.Text.ToLower();
 
+            // Log details
+            _logger.LogDebug($"Received input: {input}");
+
             //  What do we need to do?
             if (String.IsNullOrEmpty(input))
             {
@@ -152,11 +156,17 @@ namespace SelfServiceProj
                     case "help":
                     case "list":
 
+                        // Log details
+                        _logger.LogDebug("Matched help/list...");
+
                         // Send list of actions
                         attachment = await DoList();
                         break;
 
                     case string s when Regex.IsMatch(s, @"^help\s+[0-9a-zA-Z]+$"):
+
+                        // Log details
+                        _logger.LogDebug("Matched regex...");
 
                         // Specific action help
                         var cmd = input.Split(" ");
@@ -171,6 +181,11 @@ namespace SelfServiceProj
                         break;
 
                     default:
+
+                        // Log details
+                        _logger.LogDebug("No match...");
+
+                        // Send list of actions
                         attachment = await DoList();
                         break;
                 }
