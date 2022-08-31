@@ -12,6 +12,7 @@ namespace SelfServiceProj
     public class BotHandler : ActivityHandler
     {
 
+        protected static string _cardFolder = "Resources";
         protected readonly SelfServiceConfig _config;
         protected readonly ILogger _logger;
         protected readonly string _rootPath;
@@ -34,23 +35,6 @@ namespace SelfServiceProj
         }
 
 
-        private async Task<Attachment> DoBasicHelp()
-        {
-
-            // Connect to DB
-            var db = new Database(_config);
-
-            // Get list of actions
-            var actions = await db.GetAll();
-
-            // Create an action list card
-            var card = new SelfServiceProj.ActionListCard();
-            var attachment = card.GenerateAttachment();
-
-            return attachment;
-        }
-
-
         private async Task<Attachment> DoActionHelp(String action)
         {
 
@@ -68,6 +52,46 @@ namespace SelfServiceProj
         }
 
 
+        private async Task<Attachment> DoBasicHelp()
+        {
+
+            // Connect to DB
+            var db = new Database(_config);
+
+            // Get list of actions
+            var actions = await db.GetAll();
+
+            // Create the help/list card
+            var card = new SelfServiceProj.ActionListCard();
+            var attachment = card.GenerateAttachment();
+
+            return attachment;
+        }
+
+
+        private Attachment DoWelcome()
+        {
+
+            var json = LoadJson("Welcome.json");
+            var attachment = new Attachment()
+            {
+                ContentType = "application/vnd.microsoft.card.adaptive",
+                Content = JsonConvert.DeserializeObject(json),
+            };
+            return attachment;
+        }
+
+
+        private string LoadJson(string file)
+        {
+
+            // Derive the path to the Card JSON file
+            var contentPath = Path.GetFullPath(Path.Combine(_rootPath, _cardFolder, file));
+            var cardJson = File.ReadAllText(contentPath);
+            return cardJson;
+        }
+
+
         protected override async Task OnMembersAddedAsync(
             IList<ChannelAccount> membersAdded,
             ITurnContext<IConversationUpdateActivity> turnContext,
@@ -78,9 +102,7 @@ namespace SelfServiceProj
             _logger.LogDebug("Started OnMembersAddedAsync() processing...");
 
             // Create a welcome card
-            // var card = new SelfServiceProj.WelcomeCard();
-            // var attachment = card.GenerateAttachment();
-            var attachment = LoadSchema("Welcome.json");
+            var attachment = DoWelcome();
 
             // Send the welcome card to new members
             foreach (var member in membersAdded)
@@ -155,21 +177,6 @@ namespace SelfServiceProj
 
             // Log end
             _logger.LogDebug("Finished OnMessageActivityAsync() processing...");
-        }
-
-
-        private Attachment LoadSchema(string file)
-        {
-
-            // Derive the path to the Card JSON file
-            var contentPath = Path.GetFullPath(Path.Combine(_rootPath, "Resources", file));
-            var adaptiveCardJson = File.ReadAllText(contentPath);
-            var adaptiveCardAttachment = new Attachment()
-            {
-                ContentType = "application/vnd.microsoft.card.adaptive",
-                Content = JsonConvert.DeserializeObject(adaptiveCardJson),
-            };
-            return adaptiveCardAttachment;
         }
     }
 }
