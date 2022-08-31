@@ -20,7 +20,7 @@ namespace SelfServiceProj
             _card.Actions.Add(new AdaptiveSubmitAction()
             {
                 Title = "List Actions",
-                Data = "list"
+                Data = "help"
             });
         }
     }

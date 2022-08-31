@@ -29,14 +29,14 @@ namespace SelfServiceProj
         }
 
 
-        private Attachment DoBasicHelp()
+        private async Task<Attachment> DoBasicHelp()
         {
 
             // Connect to DB
             var db = new Database(_config);
 
             // Get list of actions
-            var actions = db.GetAll();
+            var actions = await db.GetAll();
 
             // Create an action list card
             var card = new SelfServiceProj.ActionListCard();
@@ -46,14 +46,14 @@ namespace SelfServiceProj
         }
 
 
-        private Attachment DoActionHelp(String action)
+        private async Task<Attachment> DoActionHelp(String action)
         {
 
             // Connect to DB
             var db = new Database(_config);
 
             // Get list of actions
-            var actionDetails = db.GetAction(action);
+            var actionDetails = await db.GetAction(action);
 
             // Create an action help card
             var card = new SelfServiceProj.ActionHelpCard();
@@ -108,7 +108,7 @@ namespace SelfServiceProj
             if (String.IsNullOrEmpty(input))
             {
                 // No input so send help
-                attachment = DoBasicHelp();
+                attachment = await DoBasicHelp();
             }
             else
             {
@@ -119,7 +119,7 @@ namespace SelfServiceProj
                     case "list":
 
                         // Basic help (ie list actions)
-                        attachment = DoBasicHelp();
+                        attachment = await DoBasicHelp();
                         break;
 
                     case string s when Regex.IsMatch(s, @"^help\s+[0-9a-zA-Z]+$"):
@@ -128,16 +128,16 @@ namespace SelfServiceProj
                         var cmd = input.Split(" ");
                         if (cmd.Length != 2)
                         {
-                            attachment = DoBasicHelp();
+                            attachment = await DoBasicHelp();
                         }
                         else
                         {
-                            attachment = DoActionHelp(cmd[1]);
+                            attachment = await DoActionHelp(cmd[1]);
                         }
                         break;
 
                     default:
-                        attachment = DoBasicHelp();
+                        attachment = await DoBasicHelp();
                         break;
                 }
             }
