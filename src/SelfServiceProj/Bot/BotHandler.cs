@@ -1,3 +1,4 @@
+using AdaptiveCards.Templating;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Schema;
@@ -58,15 +59,24 @@ namespace SelfServiceProj
         private async Task<Attachment> DoList()
         {
 
-            // Connect to DB
-            var db = new Database(_config);
-
             // Get list of actions
-            var actions = await db.GetAll();
+            var db = new Database(_config);
+            var items = await db.GetAll();
+            var itemList = items.ToList();
+
+            // Create templating data
+            var actions = new Actions();
+            actions.ActionList = itemList;
             var actionsJson = JsonConvert.SerializeObject(actions);
 
+            // Load the template
+            var templateJson = LoadJson("List.json");
+            var template = new AdaptiveCardTemplate(templateJson);
+
+            // Populate the data
+            var json = template.Expand(actionsJson);
+
             // Create the help/list card
-            var json = LoadJson("List.json");
             var attachment = new Attachment()
             {
                 ContentType = "application/vnd.microsoft.card.adaptive",

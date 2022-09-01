@@ -37,6 +37,26 @@
                 "${workspaceFolder}/src/SelfServiceProj/SelfServiceProj.csproj"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Function: Debug",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/src/SelfServiceProj; func start --dotnet-isolated-debug",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Function: Run",
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/src/SelfServiceProj; func start",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
         }
     ]
 }

@@ -5,6 +5,9 @@ namespace SelfServiceProj
 {
     public class Action
     {
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; } = string.Empty;
+
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; } = string.Empty;
 
