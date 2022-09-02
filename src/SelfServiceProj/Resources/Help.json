@@ -2,13 +2,65 @@
     "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
     "version": "1.3",
     "type": "AdaptiveCard",
+    "$data": "${actions}",
     "body": [
         {
             "type": "TextBlock",
-            "text": "Action Help!!!",
-            "size": "large",
-            "weight": "bolder",
-            "isSubtle": false
+            "size": "medium",
+            "text": "${id}",
+            "weight": "bolder"
+        },
+        {
+            "type": "TextBlock",
+            "text": "${description}",
+            "wrap": true
+        },
+        {
+            "type": "FactSet",
+            "facts": [
+                {
+                    "title": "Category",
+                    "value": "${category}"
+                },
+                {
+                    "title": "Role",
+                    "value": "${role}"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "type": "Action.OpenUrl",
+            "title": "View",
+            "url": "${docurl}"
+        },
+        {
+            "type": "Action.ShowCard",
+            "title": "Perform",
+            "card": {
+                "type": "AdaptiveCard",
+                "body": [
+                    {
+                        "type": "Input.Date",
+                        "label": "Enter the due date",
+                        "id": "dueDate"
+                    },
+                    {
+                        "type": "Input.Text",
+                        "id": "comment",
+                        "isMultiline": true,
+                        "label": "Add a comment"
+                    }
+                ],
+                "actions": [
+                    {
+                        "type": "Action.Submit",
+                        "title": "OK"
+                    }
+                ],
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json"
+            }
         }
     ]
 }

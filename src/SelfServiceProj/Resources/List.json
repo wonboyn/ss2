@@ -5,7 +5,7 @@
     "body": [
         {
             "type": "TextBlock",
-            "text": "List of available actions",
+            "text": "Available Actions",
             "size": "large",
             "weight": "bolder",
             "isSubtle": false
@@ -21,24 +21,25 @@
                     "columns": [
                         {
                             "type": "Column",
-                            "width": "auto",
+                            "width": "20",
                             "items": [
                                 {
                                     "type": "TextBlock",
+                                    "horizontalAlignment": "center",
                                     "text": "ACTION",
-                                    "weight": "bolder",
+                                    "weight": "Bolder",
                                     "wrap": true
                                 }
                             ]
                         },
                         {
                             "type": "Column",
-                            "width": "stretch",
+                            "width": "80",
                             "items": [
                                 {
                                     "type": "TextBlock",
-                                    "text": "DETAIL",
-                                    "weight": "bolder",
+                                    "text": "DESCRIPTION",
+                                    "weight": "Bolder",
                                     "wrap": true
                                 }
                             ]
@@ -56,12 +57,13 @@
                     "columns": [
                         {
                             "type": "Column",
-                            "width": "auto",
+                            "spacing": "Medium",
+                            "width": "20",
                             "items": [
                                 {
                                     "type": "TextBlock",
+                                    "horizontalAlignment": "center",
                                     "text": "${id}",
-                                    "weight": "bolder",
                                     "wrap": true
                                 }
                             ]
@@ -69,12 +71,28 @@
                         {
                             "type": "Column",
                             "spacing": "Medium",
-                            "width": "stretch",
+                            "width": "80",
                             "items": [
                                 {
                                     "type": "TextBlock",
                                     "text": "${description}",
                                     "wrap": true
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "items": [
+                                {
+                                    "type": "ActionSet",
+                                    "actions": [
+                                        {
+                                            "type": "Action.Submit",
+                                            "title": "Info",
+                                            "data": "help ${id}"
+                                        }
+                                    ]
                                 }
                             ]
                         }

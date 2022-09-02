@@ -39,11 +39,9 @@ namespace SelfServiceProj
         private async Task<Attachment> DoHelp(String action)
         {
 
-            // Connect to DB
+            // Get the action
             var db = new Database(_config);
-
-            // Get list of actions
-            var actionDetails = await db.GetAction(action);
+            var item = await db.GetAction(action);
 
             // Create an action help card
             var json = LoadJson("Help.json");
