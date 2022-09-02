@@ -43,8 +43,17 @@ namespace SelfServiceProj
             var db = new Database(_config);
             var item = await db.GetAction(action);
 
-            // Create an action help card
-            var json = LoadJson("Help.json");
+            // Create templating data
+            var dataJson = JsonConvert.SerializeObject(item);
+
+            // Load the template
+            var templateJson = LoadJson("Help.json");
+            var template = new AdaptiveCardTemplate(templateJson);
+
+            // Populate the data
+            var json = template.Expand(dataJson);
+
+            // Create the action help card
             var attachment = new Attachment()
             {
                 ContentType = "application/vnd.microsoft.card.adaptive",
@@ -65,14 +74,14 @@ namespace SelfServiceProj
             // Create templating data
             var actions = new Actions();
             actions.ActionList = itemList;
-            var actionsJson = JsonConvert.SerializeObject(actions);
+            var dataJson = JsonConvert.SerializeObject(actions);
 
             // Load the template
             var templateJson = LoadJson("List.json");
             var template = new AdaptiveCardTemplate(templateJson);
 
             // Populate the data
-            var json = template.Expand(actionsJson);
+            var json = template.Expand(dataJson);
 
             // Create the help/list card
             var attachment = new Attachment()
