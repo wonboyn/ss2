@@ -49,7 +49,7 @@
             ]
         },
         {
-            "$data": "${actions}",
+            "$data": "${records}",
             "type": "Container",
             "items": [
                 {

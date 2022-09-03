@@ -44,7 +44,9 @@ namespace SelfServiceProj
             var item = await db.GetAction(action);
 
             // Create templating data
-            var dataJson = JsonConvert.SerializeObject(item);
+            var record = new Record();
+            record.Item = item;
+            var dataJson = JsonConvert.SerializeObject(record);
 
             // Load the template
             var templateJson = LoadJson("Help.json");
@@ -72,9 +74,9 @@ namespace SelfServiceProj
             var itemList = items.ToList();
 
             // Create templating data
-            var actions = new Actions();
-            actions.ActionList = itemList;
-            var dataJson = JsonConvert.SerializeObject(actions);
+            var records = new Records();
+            records.ItemList = itemList;
+            var dataJson = JsonConvert.SerializeObject(records);
 
             // Load the template
             var templateJson = LoadJson("List.json");
