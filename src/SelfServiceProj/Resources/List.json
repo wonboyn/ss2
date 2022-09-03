@@ -7,7 +7,7 @@
             "type": "TextBlock",
             "text": "Available Actions",
             "size": "large",
-            "weight": "bolder",
+            "weight": "Bolder",
             "isSubtle": false
         },
         {
